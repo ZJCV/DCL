@@ -30,9 +30,6 @@
 
 Differ with other attention-based or part-based fine-classification methods, DCL adds an `Adversarial Loss` and `Region Align Network` in training, and only use backbone network in infer. Improve the accuracy of the model without affecting the reasoning speed.
 
-Improve the accuracy of the model without affecting the reasoning speed.
-
-
 Current project implementation is based on [ JDAI-CV/DCL](https://github.com/JDAI-CV/DCL).
 
 ## Installation
