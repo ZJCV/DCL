@@ -47,7 +47,7 @@ def build_model(cfg, device):
         convert_sync_bn(model, du.LOCAL_PROCESS_GROUP)
 
     if cfg.DCL.USE_DCL:
-        model = DCLNet(model)
+        model = DCLNet(model, swap_size=cfg.DCL.SWAP_SIZE)
 
     if du.is_master_proc():
         logger.info(f'full model info:')
