@@ -53,12 +53,12 @@ def parse(image_path_list, split_list, src_root, dst_root):
 
 
 if __name__ == '__main__':
-    images_path = '/home/zj/data/cub/CUB_200_2011/images.txt'
+    images_path = 'data/cub/CUB_200_2011/images.txt'
     image_path_list = parse_txt_path(images_path)
 
-    train_test_split_path = '/home/zj/data/cub/CUB_200_2011/train_test_split.txt'
+    train_test_split_path = 'data/cub/CUB_200_2011/train_test_split.txt'
     split_list = parse_txt_path(train_test_split_path)
 
-    src_root = '/home/zj/data/cub/CUB_200_2011/images'
+    src_root = 'data/cub/CUB_200_2011/images'
     dst_root = 'data/cub/'
     parse(image_path_list, split_list, src_root, dst_root)
