@@ -3,7 +3,7 @@ NUM_NODES: 1
 RANK_ID: 0
 DIST_BACKEND: "nccl"
 RNG_SEED: 1
-OUTPUT_DIR: 'outputs/cifar/r50_cifar100_224_e100_sgd_dcl'
+OUTPUT_DIR: 'outputs/cifar/mbv2_cifar100_224_e100_sgd_dcl_5x5_1_0l_1_0b_0_01g'
 TRAIN:
   LOG_STEP: 10
   GRADIENT_ACCUMULATE_STEP: 1
@@ -15,10 +15,10 @@ TRAIN:
   HYBRID_PRECISION: True
 DCL:
   USE_DCL: True
-  SWAP_SIZE: (7, 7)
+  SWAP_SIZE: (5, 5)
   LAMBDA: 1.0
   BETA: 1.0
-  GAMMA: 1.0
+  GAMMA: 0.01
   TRAIN_METHODS: ('Normalize', 'ToTensor')
   TEST_METHODS: ('Normalize', 'ToTensor')
   NORMALIZE: ((0.445, 0.445, 0.445), (0.225, 0.225, 0.225), 255.0, 1.0)
@@ -49,7 +49,7 @@ MODEL:
   HEAD:
     NUM_CLASSES: 100
   RECOGNIZER:
-    NAME: 'resnet50'
+    NAME: 'mobilenet_v2'
     PRELOADED: ""
     PRETRAINED: ""
   CRITERION:
@@ -59,7 +59,7 @@ OPTIMIZER:
   LR: 0.05
   MOMENTUM: 0.9
   WEIGHT_DECAY:
-    DECAY: 1e-4
+    DECAY: 4e-5
     NO_BIAS: True
     NO_NORM: True
 LR_SCHEDULER:
