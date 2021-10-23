@@ -40,11 +40,11 @@ class DCLLoss(nn.Module, ABC):
 
         res_dl = output_dict[KEY_OUTPUT_DL]
         dl_targets = targets[KEY_OUTPUT_DL]
-        dl_loss = self.dl_loss(res_dl, dl_targets) * self.gamma
+        dl_loss = self.dl_loss(res_dl, dl_targets) * self.beta
 
         res_cl = output_dict[KEY_OUTPUT_CL]
         cl_targets = targets[KEY_OUTPUT_CL]
-        cl_loss = self.cl_loss(res_cl, cl_targets) * self.beta
+        cl_loss = self.cl_loss(res_cl, cl_targets) * self.gamma
 
         return {
             KEY_LOSS: task_loss + cl_loss + dl_loss,
