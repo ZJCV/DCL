@@ -8,6 +8,7 @@
 """
 
 from .cifar import CIFAR
+from .cub import CUB
 
 
 def build_dataset(cfg, transform=None, target_transform=None, is_train=True,
@@ -24,6 +25,9 @@ def build_dataset(cfg, transform=None, target_transform=None, is_train=True,
         dataset = CIFAR(data_root, train=is_train, transform=transform, target_transform=target_transform,
                         top_k=top_k, is_cifar100=False,
                         dcl_transform=dcl_transform, use_dcl=use_dcl, swap_size=swap_size)
+    elif dataset_name == 'CUB':
+        dataset = CUB(data_root, train=is_train, transform=transform, target_transform=target_transform, top_k=top_k,
+                      dcl_transform=dcl_transform, use_dcl=use_dcl, swap_size=swap_size)
     else:
         raise ValueError(f"the dataset {dataset_name} does not exist")
 
