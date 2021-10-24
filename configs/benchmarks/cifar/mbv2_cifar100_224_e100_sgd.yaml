@@ -3,7 +3,7 @@ NUM_NODES: 1
 RANK_ID: 0
 DIST_BACKEND: "nccl"
 RNG_SEED: 1
-OUTPUT_DIR: 'outputs/cifar/r50_cifar100_224_e100_sgd_dcl_5x5_1_0L_1_0B_0_01G'
+OUTPUT_DIR: 'outputs/cifar/mbv2_cifar100_224_e100_sgd'
 TRAIN:
   LOG_STEP: 10
   GRADIENT_ACCUMULATE_STEP: 1
@@ -14,11 +14,11 @@ TRAIN:
   USE_TENSORBOARD: True
   HYBRID_PRECISION: True
 DCL:
-  USE_DCL: True
-  SWAP_SIZE: (5, 5)
+  USE_DCL: False
+  SWAP_SIZE: (7, 7)
   LAMBDA: 1.0
   BETA: 1.0
-  GAMMA: 0.01
+  GAMMA: 1.0
   TRAIN_METHODS: ('Normalize', 'ToTensor')
   TEST_METHODS: ('Normalize', 'ToTensor')
   NORMALIZE: ((0.445, 0.445, 0.445), (0.225, 0.225, 0.225), 255.0, 1.0)
@@ -29,8 +29,8 @@ DATASET:
   TEST_ROOT: './data/cifar'
   TOP_K: (1, 5)
 TRANSFORM:
-  TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'ColorJitter', 'SquarePad', 'Resize', 'RandomCrop')
-  TEST_METHODS: ('SquarePad', 'Resize')
+  TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'ColorJitter', 'SquarePad', 'Resize', 'RandomCrop', 'Normalize', 'ToTensor')
+  TEST_METHODS: ('SquarePad', 'Resize', 'Normalize', 'ToTensor')
   ROTATE: ((-30, 30), 1, 4, None, 0.5)
   HORIZONTAL_FLIP: 0.5
   COLOR_JITTER: (0.2, 0.2, 0.2, 0.2, 0.5)
@@ -38,7 +38,8 @@ TRANSFORM:
   TRAIN_RESIZE: ((256, 256), 1, 1.0)
   TEST_RESIZE: ((224, 224), 1, 1.0)
   RANDOM_CROP: ((224, 224), 1.0)
-  TEST_CENTER_CROP: ((224, 224), 1.0)
+  NORMALIZE: ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225), 255.0, 1.0)
+  TO_TENSOR: 1.0
 DATALOADER:
   TRAIN_BATCH_SIZE: 128
   TEST_BATCH_SIZE: 128
@@ -49,17 +50,17 @@ MODEL:
   HEAD:
     NUM_CLASSES: 100
   RECOGNIZER:
-    NAME: 'resnet50'
+    NAME: 'mobilenet_v2'
     PRELOADED: ""
     PRETRAINED: ""
   CRITERION:
-    NAME: 'DCLLoss'
+    NAME: 'CrossEntropyLoss'
 OPTIMIZER:
   NAME: 'SGD'
   LR: 0.05
   MOMENTUM: 0.9
   WEIGHT_DECAY:
-    DECAY: 1e-4
+    DECAY: 4e-5
     NO_BIAS: True
     NO_NORM: True
 LR_SCHEDULER:

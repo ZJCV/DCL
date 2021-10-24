@@ -3,7 +3,7 @@ NUM_NODES: 1
 RANK_ID: 0
 DIST_BACKEND: "nccl"
 RNG_SEED: 1
-OUTPUT_DIR: 'outputs/cifar/mbv2_cifar100_224_e100_sgd_dcl_5x5_1_0l_1_0b_0_01g'
+OUTPUT_DIR: 'outputs/cifar/mbv2_cifar100_224_e100_sgd_dcl_5x5'
 TRAIN:
   LOG_STEP: 10
   GRADIENT_ACCUMULATE_STEP: 1
@@ -18,7 +18,7 @@ DCL:
   SWAP_SIZE: (5, 5)
   LAMBDA: 1.0
   BETA: 1.0
-  GAMMA: 0.01
+  GAMMA: 1.0
   TRAIN_METHODS: ('Normalize', 'ToTensor')
   TEST_METHODS: ('Normalize', 'ToTensor')
   NORMALIZE: ((0.445, 0.445, 0.445), (0.225, 0.225, 0.225), 255.0, 1.0)
@@ -38,7 +38,6 @@ TRANSFORM:
   TRAIN_RESIZE: ((256, 256), 1, 1.0)
   TEST_RESIZE: ((224, 224), 1, 1.0)
   RANDOM_CROP: ((224, 224), 1.0)
-  TEST_CENTER_CROP: ((224, 224), 1.0)
 DATALOADER:
   TRAIN_BATCH_SIZE: 128
   TEST_BATCH_SIZE: 128

@@ -1,9 +1,9 @@
-NUM_GPUS: 1
+NUM_GPUS: 4
 NUM_NODES: 1
 RANK_ID: 0
 DIST_BACKEND: "nccl"
 RNG_SEED: 1
-OUTPUT_DIR: 'outputs/cifar/mbv2_cifar100_224_e100_sgd_dcl_3x3_1_0l_1_0b_0_01g'
+OUTPUT_DIR: 'outputs/cub/r50_cub_448_e100_sgd_dcl_3x3_g4'
 TRAIN:
   LOG_STEP: 10
   GRADIENT_ACCUMULATE_STEP: 1
@@ -18,38 +18,41 @@ DCL:
   SWAP_SIZE: (3, 3)
   LAMBDA: 1.0
   BETA: 1.0
-  GAMMA: 0.01
+  GAMMA: 1.0
   TRAIN_METHODS: ('Normalize', 'ToTensor')
   TEST_METHODS: ('Normalize', 'ToTensor')
   NORMALIZE: ((0.445, 0.445, 0.445), (0.225, 0.225, 0.225), 255.0, 1.0)
   TO_TENSOR: 1.0
 DATASET:
-  NAME: 'CIFAR100'
-  TRAIN_ROOT: './data/cifar'
-  TEST_ROOT: './data/cifar'
+  NAME: 'CUB'
+  TRAIN_ROOT: './data/cub/train'
+  TEST_ROOT: './data/cub/test'
   TOP_K: (1, 5)
 TRANSFORM:
+#  TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'ColorJitter', 'SquarePad', 'Resize', 'RandomCrop', 'Normalize', 'ToTensor')
+#  TEST_METHODS: ('SquarePad', 'Resize', 'Normalize', 'ToTensor')
   TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'ColorJitter', 'SquarePad', 'Resize', 'RandomCrop')
   TEST_METHODS: ('SquarePad', 'Resize')
   ROTATE: ((-30, 30), 1, 4, None, 0.5)
   HORIZONTAL_FLIP: 0.5
   COLOR_JITTER: (0.2, 0.2, 0.2, 0.2, 0.5)
   SQUARE_PAD: ("center", 0, 0, 1.0)
-  TRAIN_RESIZE: ((256, 256), 1, 1.0)
-  TEST_RESIZE: ((224, 224), 1, 1.0)
-  RANDOM_CROP: ((224, 224), 1.0)
-  TEST_CENTER_CROP: ((224, 224), 1.0)
+  TRAIN_RESIZE: ((512, 512), 1, 1.0)
+  TEST_RESIZE: ((448, 448), 1, 1.0)
+  RANDOM_CROP: ((448, 448), 1.0)
+#  NORMALIZE: ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225), 255.0, 1.0)
+#  TO_TENSOR: 1.0
 DATALOADER:
-  TRAIN_BATCH_SIZE: 128
-  TEST_BATCH_SIZE: 128
+  TRAIN_BATCH_SIZE: 32
+  TEST_BATCH_SIZE: 32
   NUM_WORKERS: 4
   RANDOM_SAMPLE: True
   PREFETCHER: True
 MODEL:
   HEAD:
-    NUM_CLASSES: 100
+    NUM_CLASSES: 200
   RECOGNIZER:
-    NAME: 'mobilenet_v2'
+    NAME: 'resnet50'
     PRELOADED: ""
     PRETRAINED: ""
   CRITERION:
@@ -59,7 +62,7 @@ OPTIMIZER:
   LR: 0.05
   MOMENTUM: 0.9
   WEIGHT_DECAY:
-    DECAY: 4e-5
+    DECAY: 1e-4
     NO_BIAS: True
     NO_NORM: True
 LR_SCHEDULER:
