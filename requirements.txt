@@ -41,4 +41,4 @@ yacs == 0.1.8
 # dcl/model/dclnet/dclnet.py: 16
 # dcl/model/mobilenet/mobilenet_v2.py: 15
 # dcl/model/resnet/resnet.py: 17
-zcls == 0.13.3
+zcls == 0.13.5
