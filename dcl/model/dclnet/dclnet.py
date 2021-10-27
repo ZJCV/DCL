@@ -9,6 +9,7 @@
 
 import torch
 import torch.nn as nn
+from torchvision.models.mobilenetv2 import ConvBNReLU
 
 from ..resnet.resnet import ResNet
 from ..mobilenet.mobilenet_v2 import MobileNetV2
@@ -25,14 +26,19 @@ class DCLNet(nn.Module):
 
         feature_dims = model.get_backbone_dims()
         # Adversarial Learning
-        self.dl_net = nn.Linear(feature_dims, 2, bias=False)
+        # only use cls_2, not realize cls_2xmul
+        self.dl_net = nn.Linear(feature_dims, 2, bias=True)
         # Region Alignment Network
         self.cl_net_feature_extractor = nn.Sequential(
-            nn.Conv2d(feature_dims, feature_dims, kernel_size=(1, 1), stride=(1, 1), padding=0, bias=True),
-            nn.AdaptiveAvgPool2d((1, 1))
+            # dw
+            ConvBNReLU(feature_dims, feature_dims, stride=2, groups=feature_dims, norm_layer=nn.BatchNorm2d),
+            # pw-linear
+            nn.Conv2d(feature_dims, feature_dims, kernel_size=(1, 1), stride=(1, 1), padding=0, bias=False),
+            nn.BatchNorm2d(feature_dims)
         )
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         swap_dims = swap_size[0] * swap_size[1]
-        self.cl_net_classifier = nn.Linear(feature_dims, swap_dims)
+        self.cl_net_classifier = nn.Linear(feature_dims, swap_dims, bias=True)
 
         self.model = model
 
@@ -45,7 +51,7 @@ class DCLNet(nn.Module):
         dl_res = self.dl_net(feat2)
 
         mask = self.cl_net_feature_extractor(feat1)
-        mask = torch.tanh(mask)
+        mask = self.avgpool(mask)
         mask = mask.view(mask.size()[0], -1)
         cl_res = self.cl_net_classifier(mask)
 
