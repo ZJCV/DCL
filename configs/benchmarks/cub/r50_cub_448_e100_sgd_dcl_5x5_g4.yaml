@@ -1,0 +1,77 @@
+NUM_GPUS: 4
+NUM_NODES: 1
+RANK_ID: 0
+DIST_BACKEND: "nccl"
+RNG_SEED: 1
+OUTPUT_DIR: 'outputs/cub/r50_cub_448_e100_sgd_dcl_5x5_g4'
+TRAIN:
+  LOG_STEP: 10
+  GRADIENT_ACCUMULATE_STEP: 1
+  MAX_EPOCH: 100
+  SAVE_EPOCH: 1
+  EVAL_EPOCH: 1
+  RESUME: False
+  USE_TENSORBOARD: True
+  HYBRID_PRECISION: True
+DCL:
+  USE_DCL: True
+  SWAP_SIZE: (5, 5)
+  LAMBDA: 1.0
+  BETA: 1.0
+  GAMMA: 1.0
+  TRAIN_METHODS: ('Normalize', 'ToTensor')
+  TEST_METHODS: ('Normalize', 'ToTensor')
+  NORMALIZE: ((0.445, 0.445, 0.445), (0.225, 0.225, 0.225), 255.0, 1.0)
+  TO_TENSOR: 1.0
+DATASET:
+  NAME: 'CUB'
+  TRAIN_ROOT: './data/cub/train'
+  TEST_ROOT: './data/cub/test'
+  TOP_K: (1, 5)
+TRANSFORM:
+#  TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'ColorJitter', 'SquarePad', 'Resize', 'RandomCrop', 'Normalize', 'ToTensor')
+#  TEST_METHODS: ('SquarePad', 'Resize', 'Normalize', 'ToTensor')
+  TRAIN_METHODS: ('Rotate', 'HorizontalFlip', 'AutoAugment', 'SquarePad', 'Resize', 'RandomCrop', 'CoarseDropout')
+  TEST_METHODS: ('SquarePad', 'Resize')
+  ROTATE: ((-30, 30), 1, 4, None, 0.5)
+  HORIZONTAL_FLIP: 0.5
+  SQUARE_PAD: ("center", 0, 0, 1.0)
+  TRAIN_RESIZE: ((512, 512), 1, 1.0)
+  TEST_RESIZE: ((448, 448), 1, 1.0)
+  RANDOM_CROP: ((448, 448), 1.0)
+  AUTOAUGMENT: ("cifar10", 0.5)
+  COARSE_DROPOUT: (8, 8, 8, None, None, None, 0, 0.5)
+#  NORMALIZE: ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225), 255.0, 1.0)
+#  TO_TENSOR: 1.0
+DATALOADER:
+  TRAIN_BATCH_SIZE: 32
+  TEST_BATCH_SIZE: 32
+  NUM_WORKERS: 4
+  RANDOM_SAMPLE: True
+  PREFETCHER: True
+MODEL:
+  HEAD:
+    NUM_CLASSES: 200
+  RECOGNIZER:
+    NAME: 'resnet50'
+    PRELOADED: ""
+    PRETRAINED: ""
+  CRITERION:
+    NAME: 'DCLLoss'
+OPTIMIZER:
+  NAME: 'SGD'
+  LR: 0.05
+  MOMENTUM: 0.9
+  WEIGHT_DECAY:
+    DECAY: 1e-4
+    NO_BIAS: True
+    NO_NORM: True
+LR_SCHEDULER:
+  NAME: 'CosineAnnealingLR'
+  IS_WARMUP: True
+  GAMMA: 0.1
+  WARMUP:
+    ITERATION: 10
+    MULTIPLIER: 1.0
+  COSINE_ANNEALING_LR:
+    MINIMAL_LR: 1e-5
