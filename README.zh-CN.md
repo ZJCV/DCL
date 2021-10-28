@@ -15,6 +15,12 @@
   <a href="http://commitizen.github.io/cz-cli/"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
 </p>
 
+* 解析：[ Destruction and Construction Learning for Fine-grained Image Recognition](https://blog.zhujian.life/posts/1f0dcd30.html)
+
+更详细的训练数据可以查看：
+
+* [Details](./docs/readme.md)
+
 ## 内容列表
 
 - [内容列表](#内容列表)
@@ -40,6 +46,17 @@ $ pip install -r requirements.txt
 
 ## 用法
 
+* Train
+
+```angular2html
+$ CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/train.py -cfg=configs/cub/r50_cub_448_e100_sgd_dcl_5x5_g4.yaml
+```
+
+* Test
+
+```angular2html
+$ CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/test.py -cfg=configs/cub/r50_cub_448_e100_sgd_dcl_5x5_g4.yaml
+```
 
 ## 主要维护人员
 

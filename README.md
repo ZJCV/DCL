@@ -15,6 +15,10 @@
   <a href="http://commitizen.github.io/cz-cli/"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg"></a>
 </p>
 
+More training statistics can see:
+
+* [Details](./docs/readme.md)
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
@@ -40,7 +44,17 @@ $ pip install -r requirements.txt
 
 ## Usage
 
-...
+* Train
+
+```angular2html
+$ CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/train.py -cfg=configs/cub/r50_cub_448_e100_sgd_dcl_5x5_g4.yaml
+```
+
+* Test
+
+```angular2html
+$ CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/test.py -cfg=configs/cub/r50_cub_448_e100_sgd_dcl_5x5_g4.yaml
+```
 
 ## Maintainers
 
